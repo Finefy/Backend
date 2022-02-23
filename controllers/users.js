@@ -11,6 +11,7 @@ const signup = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const name = req.body.name;
+    const phoneNo =req.body.phoneNo;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -34,16 +35,11 @@ const signup = async (req, res, next) => {
       email: email,
       password: hashedPassword,
       name: name,
+      phoneNo: phoneNo,
       activationToken: activationToken,
     });
     const savedUser = await user.save();
 
-    // await transport.sendMail({
-    //   from: process.env.MAIL_SENDER,
-    //   to: savedUser.email,
-    //   subject: "Confirm Your Email Address",
-    //   html: emailConfirmationTemplate(savedUser.activationToken),
-    // });
 
     // Automatically log in user after registration
     const token = jwt.sign(
@@ -152,6 +148,7 @@ const getUser = async (req, res, next) => {
       userId: user._id.toString(),
       email: user.email,
       name: user.name,
+      phoneNo: user.phoneNo,
       pages: user.pages,
     });
   } catch (err) {
@@ -163,6 +160,7 @@ const updateUser = async (req, res, next) => {
   const userId = req.userId;
   const name = req.body.name;
   const email = req.body.email;
+  const phoneNo = req.body.phoneNo;
   const password = req.body.password;
 
   try {
@@ -181,6 +179,7 @@ const updateUser = async (req, res, next) => {
 
     user.name = name;
     user.email = email;
+    user.phoneNo = phoneNo;
 
     const savedUser = await user.save();
 
@@ -189,6 +188,7 @@ const updateUser = async (req, res, next) => {
       userId: savedUser._id.toString(),
       name: savedUser.name,
       email: savedUser.email,
+      phoneNo: savedUser.phoneNo,
     });
   } catch (err) {
     next(err);
@@ -220,12 +220,12 @@ const getResetToken = async (req, res, next) => {
     user.resetTokenExpiry = resetTokenExpiry;
     const savedUser = await user.save();
 
-    // await transport.sendMail({
-    //   from: process.env.MAIL_SENDER,
-    //   to: savedUser.email,
-    //   subject: "Your Password Reset Token",
-    //   html: resetPasswordTemplate(resetToken),
-    // });
+    await transport.sendMail({
+      from: process.env.MAIL_SENDER,
+      to: savedUser.email,
+      subject: "Your Password Reset Token",
+      html: resetPasswordTemplate(resetToken),
+    });
 
     res.status(200).json({
       message: "Password Reset successfully requested! Check your inbox.",

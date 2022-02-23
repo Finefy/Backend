@@ -18,11 +18,15 @@ const nameValidator = body("name")
   .trim()
   .notEmpty()
   .withMessage("Name is required.");
+const phoneNoValidator = body("phoneNo")
+  .trim()
+  .notEmpty()
+  .withMessage("Mobile number is required.");
 
 // POST /users/signup
 router.post(
   "/signup",
-  [emailValidator, passwordValidator, nameValidator],
+  [emailValidator, passwordValidator, nameValidator, phoneNoValidator],
   usersController.signup
 );
 

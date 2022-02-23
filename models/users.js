@@ -8,12 +8,20 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
-    username: {
+    name: {
       type: String,
       required: true,
     },
     password: {
-        type: String,
-        required: true,
-      },
-    });
+      type: String,
+      required: true,
+    },
+    phoneNo: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+  });
+
+var User = mongoose.model('User', userSchema);
+module.exports = User;
