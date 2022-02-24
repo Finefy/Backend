@@ -9,19 +9,23 @@ const router = express.Router();
 const emailValidator = body("email")
   .isEmail()
   .normalizeEmail()
-  .withMessage("Email Address is not valid.");
+  .withMessage("Invalid Email Address!");
 const passwordValidator = body("password")
   .trim()
-  .isLength({ min: 6 })
-  .withMessage("Password has to be 6 chars or more.");
-const nameValidator = body("name")
+  .isLength({ min: 8 })
+  .withMessage("Password has to be 8 chars or more!");
+const nameValidator = body("fname")
   .trim()
   .notEmpty()
-  .withMessage("Name is required.");
-const phoneNoValidator = body("phoneNo")
+  .withMessage("First Name is required!");
+const nameValidator = body("lname")
   .trim()
   .notEmpty()
-  .withMessage("Mobile number is required.");
+  .withMessage("Last Name is required!");
+const phoneNoValidator = body("phone")
+  .trim()
+  .notEmpty()
+  .withMessage("Mobile number is required!");
 
 // POST /users/signup
 router.post(
