@@ -60,4 +60,16 @@ router.post(
   usersController.resetPassword
 );
 
+// TODO: /budget/*
+
+// router.get("/budget/list", isAuth, budgetController.list);
+// router.post("/budget/add", isAuth, budgetController.add);
+// router.put("/budget/update", isAuth, budgetController.update);
+
+// TODO: /categories/*
+
+// router.get("/categories/list", isAuth, categoriesController.list);
+// router.post("/categories/add", isAuth, categoriesController.add);
+// router.put("/categories/update", isAuth, categoriesController.update);
+
 module.exports = router;
