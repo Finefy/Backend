@@ -14,11 +14,11 @@ const passwordValidator = body("password")
   .trim()
   .isLength({ min: 8 })
   .withMessage("Password has to be 8 chars or more!");
-const nameValidator = body("fname")
+const fnameValidator = body("fname")
   .trim()
   .notEmpty()
   .withMessage("First Name is required!");
-const nameValidator = body("lname")
+const lnameValidator = body("lname")
   .trim()
   .notEmpty()
   .withMessage("Last Name is required!");
