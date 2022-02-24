@@ -22,40 +22,40 @@ const nameValidator = body("lname")
   .trim()
   .notEmpty()
   .withMessage("Last Name is required!");
-const phoneNoValidator = body("phone")
+const phoneValidator = body("phone")
   .trim()
   .notEmpty()
-  .withMessage("Mobile number is required!");
+  .withMessage("Phone number is required!");
 
 // POST /users/signup
 router.post(
-  "/signup",
-  [emailValidator, passwordValidator, nameValidator, phoneNoValidator],
+  "/users/signup",
+  [emailValidator, passwordValidator, fnameValidator, lnameValidator, phoneValidator],
   usersController.signup
 );
 
 // POST /users/login
 router.post(
-  "/login",
+  "/users/login",
   [emailValidator, passwordValidator],
   usersController.login
 );
 
 // POST /users/logout
-router.post("/logout", isAuth, usersController.logout);
+router.post("/users/logout", isAuth, usersController.logout);
 
 // GET /users/account
-router.get("/account", isAuth, usersController.getUser);
+router.get("/users/settings", isAuth, usersController.getUser);
 
 // PUT /users/account
-router.put("/account", isAuth, usersController.updateUser);
+router.put("/users/settings", isAuth, usersController.updateUser);
 
-// POST /users/resetToken
-router.post("/resetToken", [emailValidator], usersController.getResetToken);
+// POST /users/reset/token
+router.post("/users/reset/token", [emailValidator], usersController.getResetToken);
 
-// POST /users/resetPassword
+// POST /users/reset/password
 router.post(
-  "/resetPassword",
+  "/users/reset/password",
   [passwordValidator],
   usersController.resetPassword
 );
