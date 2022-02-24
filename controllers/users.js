@@ -10,8 +10,10 @@ const signup = async (req, res, next) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
-    const name = req.body.name;
-    const phoneNo =req.body.phoneNo;
+    const username = req.body.username;
+    const phone =req.body.phone;
+    const fname = req.body.fname;
+    const lname = req.body.lname;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,7 +26,7 @@ const signup = async (req, res, next) => {
 
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      const err = new Error("E-Mail address already exists.");
+      const err = new Error("E-Mail address already exists!");
       err.statusCode = 422;
       throw err;
     }
@@ -34,8 +36,9 @@ const signup = async (req, res, next) => {
     const user = new User({
       email: email,
       password: hashedPassword,
-      name: name,
-      phoneNo: phoneNo,
+      phone: phone,
+      fname: fname,
+      lname: lname,
       activationToken: activationToken,
     });
     const savedUser = await user.save();
@@ -48,7 +51,7 @@ const signup = async (req, res, next) => {
     );
 
     // Set cookie in the browser to store authentication state
-    const maxAge = 1000 * 60 * 60 * 24 * 3; // 3 days
+    const maxAge = 1000 * 60 * 60; // 1 hour
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: maxAge,
@@ -56,7 +59,7 @@ const signup = async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: "User successfully created.",
+      message: "User Created!",
       userId: savedUser._id,
     });
   } catch (err) {
@@ -71,7 +74,7 @@ const login = async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const err = new Error("Input validation failed.");
+      const err = new Error("Please Input Valid Values!");
       err.statusCode = 422;
       err.data = errors.array();
       throw err;
@@ -79,14 +82,14 @@ const login = async (req, res, next) => {
 
     const user = await User.findOne({ email: email });
     if (!user) {
-      const err = new Error("An user with this email could not be found.");
+      const err = new Error("Account Doesn't Exist!");
       err.statusCode = 404;
       throw err;
     }
 
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      const err = new Error("Wrong password.");
+      const err = new Error("Invalid Credentials!");
       err.statusCode = 401;
       throw err;
     }
@@ -105,7 +108,7 @@ const login = async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: "User successfully logged in.",
+      message: "User Logged In!",
       token: token,
       userId: user._id.toString(),
     });
@@ -118,14 +121,14 @@ const logout = (req, res, next) => {
   const userId = req.userId;
 
   if (!userId) {
-    const err = new Error("User is not authenticated.");
+    const err = new Error("User Unauthenticated!");
     err.statusCode = 401;
     throw err;
   }
 
   res.clearCookie("token", { domain: process.env.DOMAIN });
   res.status(200).json({
-    message: "User successfully logged out.",
+    message: "User Logged Out!",
     userId: userId,
   });
 };
@@ -138,17 +141,18 @@ const getUser = async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (!userId || !user) {
-      const err = new Error("User is not authenticated.");
+      const err = new Error("User Unauthenticated!");
       err.statusCode = 401;
       throw err;
     }
 
     res.status(200).json({
-      message: "User successfully fetched.",
+      message: "User Fetched!",
       userId: user._id.toString(),
       email: user.email,
-      name: user.name,
-      phoneNo: user.phoneNo,
+      phone: user.phone,
+      fname: user.fname,
+      lname: user.lname,
       pages: user.pages,
     });
   } catch (err) {
@@ -158,16 +162,17 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const userId = req.userId;
-  const name = req.body.name;
   const email = req.body.email;
-  const phoneNo = req.body.phoneNo;
+  const phone = req.body.phone;
+  const fname = req.body.fname;
+  const lname = req.body.lname;
   const password = req.body.password;
 
   try {
     const user = await User.findById(userId);
 
     if (!userId || !user) {
-      const err = new Error("User is not authenticated.");
+      const err = new Error("User Unauthenticated!");
       err.statusCode = 401;
       throw err;
     }
@@ -177,17 +182,19 @@ const updateUser = async (req, res, next) => {
       user.password = hashedPassword;
     }
 
-    user.name = name;
     user.email = email;
-    user.phoneNo = phoneNo;
+    user.fname = fname;
+    user.lname = lname;
+    user.phone = phone;
 
     const savedUser = await user.save();
 
     res.status(201).json({
-      message: "User successfully updated.",
+      message: "User Updated!",
       userId: savedUser._id.toString(),
-      name: savedUser.name,
       email: savedUser.email,
+      fname: savedUser.fname,
+      lname: savedUser.lname,
       phoneNo: savedUser.phoneNo,
     });
   } catch (err) {
@@ -201,7 +208,7 @@ const getResetToken = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const err = new Error("Input validation failed.");
+      const err = new Error("Please Input Valid Values!");
       err.statusCode = 422;
       err.data = errors.array();
       throw err;
@@ -209,7 +216,7 @@ const getResetToken = async (req, res, next) => {
 
     const user = await User.findOne({ email: email });
     if (!user) {
-      const err = new Error("An user with this email could not be found.");
+      const err = new Error("Account Doesn't Exist!");
       err.statusCode = 404;
       throw err;
     }
@@ -223,12 +230,12 @@ const getResetToken = async (req, res, next) => {
     await transport.sendMail({
       from: process.env.MAIL_SENDER,
       to: savedUser.email,
-      subject: "Your Password Reset Token",
+      subject: "Finefy Password Reset Token",
       html: resetPasswordTemplate(resetToken),
     });
 
     res.status(200).json({
-      message: "Password Reset successfully requested! Check your inbox.",
+      message: "Password Reset Requested! Check Your Inbox!",
     });
   } catch (err) {
     next(err);
@@ -242,7 +249,7 @@ const resetPassword = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const err = new Error("Input validation failed.");
+      const err = new Error("Please Input Valid Values!");
       err.statusCode = 422;
       err.data = errors.array();
       throw err;
@@ -253,7 +260,7 @@ const resetPassword = async (req, res, next) => {
       resetTokenExpiry: { $gt: Date.now() - 1000 * 60 * 60 },
     });
     if (!user) {
-      const err = new Error("The token is either invalid or expired.");
+      const err = new Error("Invalid / Expired Token!");
       err.statusCode = 422;
       throw err;
     }
