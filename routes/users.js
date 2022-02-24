@@ -29,7 +29,7 @@ const phoneValidator = body("phone")
 
 // POST /users/signup
 router.post(
-  "/users/signup",
+  "/users/register",
   [emailValidator, passwordValidator, fnameValidator, lnameValidator, phoneValidator],
   usersController.signup
 );
@@ -44,10 +44,10 @@ router.post(
 // POST /users/logout
 router.post("/users/logout", isAuth, usersController.logout);
 
-// GET /users/account
+// GET /users/settings
 router.get("/users/settings", isAuth, usersController.getUser);
 
-// PUT /users/account
+// PUT /users/settings
 router.put("/users/settings", isAuth, usersController.updateUser);
 
 // POST /users/reset/token
