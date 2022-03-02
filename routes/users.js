@@ -31,7 +31,7 @@ const phoneValidator = body("phone")
 router.post(
   "/users/register",
   [emailValidator, passwordValidator, fnameValidator, lnameValidator, phoneValidator],
-  usersController.signup
+  usersController.register
 );
 
 // POST /users/login
