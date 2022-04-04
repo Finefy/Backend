@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/users");
 
+const Transaction = require("../models/transaction");
+
+//ADD USER 
 const register = async (req, res, next) => {
   try {
     const email = req.body.email;
@@ -133,11 +136,13 @@ const logout = (req, res, next) => {
 };
 
 
+
 const getUser = async (req, res, next) => {
   const userId = req.userId;
 
   try {
     const user = await User.findById(userId);
+    const transaction = await User.findById(userId).populate("transactions");
 
     if (!userId || !user) {
       const err = new Error("User Unauthenticated!");
@@ -152,7 +157,7 @@ const getUser = async (req, res, next) => {
       phone: user.phone,
       fname: user.fname,
       lname: user.lname,
-      pages: user.pages,
+      transactions: transaction,
     });
   } catch (err) {
     next(err);
@@ -293,6 +298,28 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+
+//ADD TRANSACTION
+const updateTransaction = async (req,res,next) => {
+  try  
+  {  const trans = req.body;
+      const { userid } = req.params;
+      const newtransaction = await Transaction.create(trans);
+      const newUser = await User.findByIdAndUpdate(
+          userid,
+          {
+            $push: { transactions: newtransaction._id }
+          },
+          { new: true , useFindAndModify: false },
+      );
+      res.send(newUser);
+    }
+    catch(err){
+      next(err);
+    }
+}
+
+
 exports.register = register;
 exports.login = login;
 exports.logout = logout;
@@ -300,3 +327,4 @@ exports.getUser = getUser;
 exports.updateUser = updateUser;
 exports.getResetToken = getResetToken;
 exports.resetPassword = resetPassword;
+exports.updateTransaction = updateTransaction;

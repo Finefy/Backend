@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Transaction = require("./transaction");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -28,7 +29,11 @@ const userSchema = new Schema(
     age: {
       type: Number,
       required: true,
-    }
+    },
+    transactions: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Transaction"
+    }]
   });
 
 var User = mongoose.model('User', userSchema);
