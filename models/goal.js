@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Goal = require("./goal");
+const User = require("./user");
+const Category = require("./category");
 const Schema = mongoose.Schema;
 
 const goalSchema = new Schema(

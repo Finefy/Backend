@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cors = require('cors');
 
-const usersRoutes = require("./routes/users");
+const routes = require("./routes/routes.js");
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use("/users", usersRoutes);
+app.use("/", routes);
 
 // Error Handling
 app.use((err, req, res, next) => {

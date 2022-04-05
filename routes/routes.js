@@ -3,11 +3,11 @@ const { body } = require("express-validator");
 
 const isAuth = require("../middlewares/auth");
 const budgetController = require("../controllers/budget");
-const categoryController = require("../controllers/category");
+const categoriesController = require("../controllers/category");
 const coinsController = require("../controllers/coins");
-const goalController = require("../controllers/goal");
-const transactionController = require("../controllers/transaction");
-const userController = require("../controllers/user");
+const goalsController = require("../controllers/goal");
+const transactionsController = require("../controllers/transaction");
+const usersController = require("../controllers/user");
 const router = express.Router();
 
 const emailValidator = body("email")

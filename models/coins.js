@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const User = require("./user");
 const Schema = mongoose.Schema;
 
-const budgetSchema = new Schema(
+const coinsSchema = new Schema(
   {
     ofuser: {
       type: Schema.Types.ObjectId,
