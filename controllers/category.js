@@ -69,3 +69,7 @@ const update = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.list = list;
+exports.add = add;
+exports.update = update;

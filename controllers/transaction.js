@@ -95,3 +95,6 @@ const add = async (req, res, next) => {
 //     next(err);
 //   }
 // };
+
+exports.list = list;
+exports.add = add;

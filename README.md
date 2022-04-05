@@ -1,1 +1,46 @@
-# Finefy-Backend
+# Fin€fy Backend
+
+This repository stores the code for the backend of the Fin€fy project for DESIS Ascend Educare '21 - Group 3.
+
+## Requirements
+
+For development, you will only need Node.js and some other dependencies installed in your environment.
+
+### Node
+
+-   #### Node installation on Windows
+
+    Just go on [official Node.js website](https://nodejs.org/) and download the installer.
+    Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
+
+-   #### Node installation on Ubuntu
+
+    You can install nodejs and npm easily with apt install, just run the following commands.
+
+        $ sudo apt install nodejs
+        $ sudo apt install npm
+
+-   #### Other Operating Systems
+    You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
+
+If the installation was successful, you should be able to run the following command.
+
+    $ node --version
+    v8.11.3
+
+    $ npm --version
+    6.1.0
+
+## Install
+
+After downloading the pre-requisites, follow the forthcoming instructions to install all the necessary dependencies.
+
+    $ git clone https://github.com/Finefy/Backend
+    $ cd Backend
+    $ npm i
+
+## Running the project
+
+The server will be available at port 3000.
+
+    $ node index.js

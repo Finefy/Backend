@@ -7,18 +7,18 @@ const categoriesController = require("../controllers/category");
 const coinsController = require("../controllers/coins");
 const goalsController = require("../controllers/goal");
 const transactionsController = require("../controllers/transaction");
-const usersController = require("../controllers/user");
+const usersController = require("../controllers/users");
 const router = express.Router();
 
-// set up rate limiter: maximum of five requests per minute
-var RateLimit = require('express-rate-limit');
-var limiter = new RateLimit({
-  windowMs: 1*60*1000, // 1 minute
-  max: 5
-});
+// // set up rate limiter: maximum of five requests per minute
+// var RateLimit = require('express-rate-limit');
+// var limiter = new RateLimit({
+//   windowMs: 1*60*1000, // 1 minute
+//   max: 5
+// });
 
-// apply rate limiter to all requests
-express.use(limiter);
+// // apply rate limiter to all requests
+// express.use(limiter);
 
 const emailValidator = body("email")
   .isEmail()
@@ -123,7 +123,7 @@ router.post("/transactions/add", isAuth, transactionsController.add);
 
 // PUT /transactions/update
 
-router.put("/transactions/update", isAuth, transactionsController.update);
+// router.put("/transactions/update", isAuth, transactionsController.update);
 
 // GET /goals/list
 

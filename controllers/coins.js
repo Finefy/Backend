@@ -44,3 +44,6 @@ const update = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.list = list;
+exports.update = update;
