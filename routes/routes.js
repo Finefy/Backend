@@ -28,6 +28,7 @@ const phoneValidator = body("phone")
   .withMessage("Phone number is required!");
 
 // POST /users/signup
+
 router.post(
   "/users/register",
   [emailValidator, passwordValidator, fnameValidator, lnameValidator, phoneValidator],
@@ -35,6 +36,7 @@ router.post(
 );
 
 // POST /users/login
+
 router.post(
   "/users/login",
   [emailValidator, passwordValidator],
@@ -42,34 +44,83 @@ router.post(
 );
 
 // POST /users/logout
+
 router.post("/users/logout", isAuth, usersController.logout);
 
 // GET /users/settings
+
 router.get("/users/settings", isAuth, usersController.getUser);
 
 // PUT /users/settings
+
 router.put("/users/settings", isAuth, usersController.updateUser);
 
 // POST /users/reset/token
+
 router.post("/users/reset/token", [emailValidator], usersController.getResetToken);
 
 // POST /users/reset/password
+
 router.post(
   "/users/reset/password",
   [passwordValidator],
   usersController.resetPassword
 );
 
-// TODO: /budget/*
+// GET /budget/list
 
-// router.get("/budget/list", isAuth, budgetController.list);
-// router.post("/budget/add", isAuth, budgetController.add);
-// router.put("/budget/update", isAuth, budgetController.update);
+router.get("/budget/list", isAuth, budgetController.list);
 
-// TODO: /categories/*
+// POST /budget/add
 
-// router.get("/categories/list", isAuth, categoriesController.list);
-// router.post("/categories/add", isAuth, categoriesController.add);
-// router.put("/categories/update", isAuth, categoriesController.update);
+router.post("/budget/add", isAuth, budgetController.add);
+
+// PUT /budget/update
+
+router.put("/budget/update", isAuth, budgetController.update);
+
+// GET /categories/list
+
+router.get("/categories/list", isAuth, categoriesController.list);
+
+// POST /categories/add
+
+router.post("/categories/add", isAuth, categoriesController.add);
+
+// PUT /categories/update
+
+router.put("/categories/update", isAuth, categoriesController.update);
+
+// GET /coins
+
+router.get("/coins", isAuth, coinsController.list);
+
+// PUT /coins/update
+
+router.put("/coins/update", isAuth, coinsController.update);
+
+// GET /transactions/list
+
+router.get("/transactions/list", isAuth, transactionsController.list);
+
+// POST /transactions/add
+
+router.post("/transactions/add", isAuth, transactionsController.add);
+
+// PUT /transactions/update
+
+router.put("/transactions/update", isAuth, transactionsController.update);
+
+// GET /goals/list
+
+router.get("/goals/list", isAuth, goalsController.list);
+
+// POST /goals/add
+
+router.post("/goals/add", isAuth, goalsController.add);
+
+// PUT /goals/update
+
+router.put("/goals/update", isAuth, goalsController.update);
 
 module.exports = router;
