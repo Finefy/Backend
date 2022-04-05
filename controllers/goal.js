@@ -38,8 +38,8 @@ const add = async (req, res, next) => {
     }
     const goal = new Goal({
       ofuser: user,
-      categories = goals_categories,
-      limits = goals_limits
+      categories: goals_categories,
+      limits: goals_limits
     });
     const savedGoal = await goal.save();
     res.status(201).json({

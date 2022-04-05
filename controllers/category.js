@@ -1,35 +1,71 @@
-budgetControllers.controller('CategoryCtrl', ['$scope', '$http',
-	function CategoryCtrl($scope, $http) {
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Category = require("../models/category");
 
-		$http.get('http://localhost:3000/categories', {withCredentials: true}).success(function(data) {
-	    	$scope.categories = data;
-	    });
+var MongoClient = require('mongodb').MongoClient;
+var url = "";
 
-	    $scope.addCategory = function(category) {
-	    	if (category === undefined || category.name == null) {
-	    		return ;
-	    	}
+const list = async (req, res, next) => {
+  const userId = req.userId;
+  try {
+    const user = await User.findById(userId);
+    const category = await User.findById(userId).populate("category");
+    if (!userId || !user) {
+      const err = new Error("User Unauthenticated!");
+      err.statusCode = 401;
+      throw err;
+    }
+    res.status(200).json({
+      message: "Categories Fetched!",
+      name: category.name
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
-	    	//Create the new category with form input values
-	    	var c = new Object();
-	    	c.name = category.name;
+const add = async (req, res, next) => {
+  const userId = req.userId;
+  const name = req.body.name;
+  try {
+    const user = await User.findById(userId);
+    if (!userId || !user) {
+      const err = new Error("User Unauthenticated!");
+      err.statusCode = 401;
+      throw err;
+    }
+    const category = new Category({
+      ofuser: user,
+      name: name
+    });
+    const savedCategory = await category.save();
+    res.status(201).json({
+      message: "Category Added!",
+      name: category.name
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
-	    	//Save Category
-	    	$http.post('http://localhost:3000/categories', c, {withCredentials: true}).success(function(data) {
-		    	$scope.categories.push(data);
-		    });
-	    };
-
-	    $scope.deleteCategory = function(categoryId) {
-	    	$http.delete('http://localhost:3000/categories/' + categoryId, {withCredentials: true}).success(function(data) {
-	    		var categories = $scope.categories;
-		    	for (var categoryKey in categories) {
-		    		if (categories[categoryKey]._id == categoryId) {
-		    			$scope.categories.splice(categoryKey, 1);
-		    			return ;
-		    		}
-	    		}
-		    });
-	    };
-	}
-]);
+const update = async (req, res, next) => {
+  const userId = req.userId;
+  const name = req.body.name;
+  try {
+    const user = await User.findById(userId);
+    const category = await User.findById(userId).populate("category");
+    if (!userId || !user) {
+      const err = new Error("User Unauthenticated!");
+      err.statusCode = 401;
+      throw err;
+    }
+    category.name = name;
+    const savedCategory = await category.save();
+    res.status(201).json({
+      message: "Category Updated!",
+      name: category.name
+    });
+  } catch (err) {
+    next(err);
+  }
+};
