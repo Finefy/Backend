@@ -21,7 +21,7 @@ const list = async (req, res, next) => {
       res.status(200).json({
         message: "Budget Fetched!",
         email: budget.email,
-        budget:budget.budget
+        budget: budget.budget
       });
     } catch (err) {
       next(err);
@@ -43,6 +43,23 @@ const list = async (req, res, next) => {
     });
   });
 };
- 
-  // router.post("/budget/add", isAuth, budgetController.add);
-// router.put("/budget/update", isAuth, budgetController.update);
+const update = async (req, res, next) => {
+  const userId = req.userId;
+  const budgetd = req.body.budget;
+  try {
+    const user = await User.findById(userId);
+    const budget = await User.findById(userId).populate("budget");
+    if (!userId || !user) {
+      const err = new Error("User Unauthenticated!");
+      err.statusCode = 401;
+      throw err;
+    }
+    budget = budgetd;
+    const savedBudget = await budget.save();
+    res.status(201).json({
+      message: "Budget Updated!"
+    });
+  } catch (err) {
+    next(err);
+  }
+};
