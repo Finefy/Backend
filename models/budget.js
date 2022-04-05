@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
+const User = require("./user");
+const Category = require("./category");
 const Schema = mongoose.Schema;
 
 const budgetSchema = new Schema(
   {
-    email: {
-      type: String,
-      required: true,
-      unique: true,
+    ofuser: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     budget: [{
         food: Number,
@@ -34,27 +35,42 @@ const budgetSchema = new Schema(
       },
       {
         custom1: Number,
-        name1: String,
+        name1: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category"
+        },
         active1: String,
       },
       {
         custom2: Number,
-        name2: String,
+        name2: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category"
+        },
         active2: String,
       },
       {
         custom3: Number,
-        name3: String,
+        name3: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category"
+        },
         active3: String,
       },
       {
         custom4: Number,
-        name4: String,
+        name4: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category"
+        },
         active4: String,
       },
       {
         custom5: Number,
-        name5: String,
+        name5: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category"
+        },
         active5: String,
       },
     ],
