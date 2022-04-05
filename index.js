@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require('cors');
+const csrf = require("csurf")
 
 const routes = require("./routes/routes.js");
 
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use(csrf({ cookie: true }));
 app.use("/", routes);
 
 // Error Handling
