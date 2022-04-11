@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Category = require("../models/category");
+const Goal = require("../models/goal");
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "";
@@ -9,15 +9,16 @@ const list = async (req, res, next) => {
   const userId = req.userId;
   try {
     const user = await User.findById(userId);
-    const category = await User.findById(userId).populate("category");
+    const goal = await User.findById(userId).populate("goals");
     if (!userId || !user) {
       const err = new Error("User Unauthenticated!");
       err.statusCode = 401;
       throw err;
     }
     res.status(200).json({
-      message: "Categories Fetched!",
-      name: category.name
+      message: "Goals Fetched!",
+      goals_categories: goal.categories,
+      goals_limits: goal.limits
     });
   } catch (err) {
     next(err);
@@ -26,7 +27,8 @@ const list = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   const userId = req.userId;
-  const name = req.body.name;
+  const goals_categories = req.body.goals_categories;
+  const goals_limits = req.body.goals_limits;
   try {
     const user = await User.findById(userId);
     if (!userId || !user) {
@@ -34,14 +36,16 @@ const add = async (req, res, next) => {
       err.statusCode = 401;
       throw err;
     }
-    const category = new Category({
+    const goal = new Goal({
       ofuser: user,
-      name: name
+      categories: goals_categories,
+      limits: goals_limits
     });
-    const savedCategory = await category.save();
+    const savedGoal = await goal.save();
     res.status(201).json({
-      message: "Category Added!",
-      name: category.name
+      message: "Goals Added!",
+      goals_categories: goal.categories,
+      goals_limits: goal.limits
     });
   } catch (err) {
     next(err);
@@ -50,20 +54,23 @@ const add = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const userId = req.userId;
-  const name = req.body.name;
+  const goals_categories = req.body.goals_categories;
+  const goals_limits = req.body.goals_limits;
   try {
     const user = await User.findById(userId);
-    const category = await User.findById(userId).populate("category");
+    const goal = await User.findById(userId).populate("goals");
     if (!userId || !user) {
       const err = new Error("User Unauthenticated!");
       err.statusCode = 401;
       throw err;
     }
-    category.name = name;
-    const savedCategory = await category.save();
+    goal.categories = goals_categories;
+    goal.limits = goals_limits;
+    const savedGoal = await goal.save();
     res.status(201).json({
-      message: "Category Updated!",
-      name: category.name
+      message: "Goals Updated!",
+      goals_categories: goal.categories,
+      goals_limits: goal.limits
     });
   } catch (err) {
     next(err);
